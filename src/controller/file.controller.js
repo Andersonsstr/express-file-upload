@@ -4,14 +4,25 @@ const baseUrl = "http://localhost:8080/files/";
 
 const upload = async (req, res) => {
   try {
+    console.log("Opa recebi uma requisição, estou olhando!");
     await uploadFile(req, res);
 
-    if (req.file == undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
+    if (req.files == undefined) {
+      return res.status(400).send({ message: "Por favor, faça o upload de um arquivo!" });
     }
 
+    const dados = { ...req.body };
+
+    if (!dados.aitId) {
+      return res.status(400).json({ msg: "ID não informado" });
+    }
+
+    console.log(dados);
+    console.log("Show, bom demais!");
+
     res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
+      message: "Uploads finalizados com sucesso. " ,
+      dados
     });
   } catch (err) {
     console.log(err);
@@ -23,7 +34,7 @@ const upload = async (req, res) => {
     }
 
     res.status(500).send({
-      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+      message: `Erro no upload`,
     });
   }
 };
